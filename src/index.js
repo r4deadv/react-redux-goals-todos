@@ -55,6 +55,7 @@ function todos(state = [], action) {
   }
 }
 
+// reducer function
 function goals(state = [], action) {
   switch (action.type) {
     case "ADD_GOAL":
@@ -72,7 +73,15 @@ function goals(state = [], action) {
   }
 }
 
-const store = createStore(todos);
+// root reducer -> combine reducers
+function app(state = {}, action) {
+  return {
+    todos: todos(state.todos, action),
+    goals: goals(state.goals, action),
+  };
+}
+
+const store = createStore(app);
 store.subscribe(() => {
   console.log("The new state is: ", store.getState());
 });
@@ -84,6 +93,55 @@ store.dispatch({
     name: "Learn Redux",
     complete: false,
   },
+});
+
+store.dispatch({
+  type: "ADD_TODO",
+  todo: {
+    id: 1,
+    name: "Wash the car",
+    complete: false,
+  },
+});
+
+store.dispatch({
+  type: "ADD_TODO",
+  todo: {
+    id: 2,
+    name: "Go to the gym",
+    complete: true,
+  },
+});
+
+store.dispatch({
+  type: "REMOVE_TODO",
+  id: 1,
+});
+
+store.dispatch({
+  type: "TOGGLE_TODO",
+  id: 0,
+});
+
+store.dispatch({
+  type: "ADD_GOAL",
+  goal: {
+    id: 0,
+    name: "Learn Redux",
+  },
+});
+
+store.dispatch({
+  type: "ADD_GOAL",
+  goal: {
+    id: 1,
+    name: "Lose 20 pounds",
+  },
+});
+
+store.dispatch({
+  type: "REMOVE_GOAL",
+  id: 0,
 });
 
 // const unsubscribe = store.subscribe(() => {
