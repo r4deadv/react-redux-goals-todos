@@ -378,10 +378,24 @@
       )
     }
 
-    const Todos = () => {
+    const Todos = (props) => {
+      const inputRef = React.useRef()
+      const addItem = (event) => {
+        event.preventDefault();
+        const name = inputRef.current.value;
+        inputRef.current.value = '';
+
+        props.store.dispatch(addTodoAction({
+          name,
+          complete: false,
+          id: generateId()
+        }))
+      }
       return (
         <div>
-          TODOS
+          <h1>Todo List</h1>
+          <input type='text' placeholder='Add Todo' ref={inputRef} />
+          <button onClick={addItem}>Add Todo</button>
           <List />
         </div>
       )
@@ -396,11 +410,11 @@
       )
     }
 
-    const App = () => {
+    const App = (props) => {
       return (
         <div>
-          <Todos />
-          <Goals />
+          <Todos store={props.store} />
+          <Goals store={props.store} />
         </div>
 
       )
@@ -408,7 +422,7 @@
     const root = ReactDOM.createRoot(document.getElementById('app'))
     root.render(
       <React.StrictMode>
-        <App />
+        <App store={store} />
       </React.StrictMode>
     )
   </script>
