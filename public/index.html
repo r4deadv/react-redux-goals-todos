@@ -24,14 +24,18 @@
     -->
   <title>React Redux Todos Goals</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.1.2/redux.min.js"></script>
-
+  <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.17.6/babel.min.js"></script>
 </head>
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root">
-
   </div>
+  <div id="app">
+  </div>
+  <hr />
   <div>
     <h1>Todo List</h1>
     <input type="text" id="todo" placeholder="Add Todo">
@@ -363,6 +367,50 @@
 
 
 
+  </script>
+
+  <script type="text/babel">
+    const List = props => {
+      return (
+        <ul>
+          <li>LIST</li>
+        </ul>
+      )
+    }
+
+    const Todos = () => {
+      return (
+        <div>
+          TODOS
+          <List />
+        </div>
+      )
+    }
+
+    const Goals = () => {
+      return (
+        <div>
+          GOALS
+          <List />
+        </div>
+      )
+    }
+
+    const App = () => {
+      return (
+        <div>
+          <Todos />
+          <Goals />
+        </div>
+
+      )
+    }
+    const root = ReactDOM.createRoot(document.getElementById('app'))
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    )
   </script>
 </body>
 
