@@ -176,6 +176,17 @@
       }
     }
 
+    // reducer function
+    function loading(state = true, action) {
+      switch (action.type) {
+        case RECEIVE_DATA:
+          return false;
+        default:
+          return state;
+      }
+    }
+
+    // middleware
     const checker = store => next => action => {
       if (
         action.type === ADD_TODO &&
@@ -194,6 +205,7 @@
       return next(action)
     }
 
+    // middleware
     const logger = store => next => action => {
       console.group(action.type)
       console.log('The action: ', action)
@@ -203,9 +215,11 @@
       return result;
     }
 
+    // creating the store
     const store = Redux.createStore(Redux.combineReducers({
       todos,
-      goals
+      goals,
+      loading,
     }), Redux.applyMiddleware(checker, logger));
 
 
@@ -307,7 +321,11 @@
         })
       }, [])
 
-      const { goals, todos } = props.store.getState();
+      const { goals, todos, loading } = props.store.getState();
+
+      if (loading === true) {
+        return <h3>Loading...</h3>
+      }
 
       return (
         <div>
