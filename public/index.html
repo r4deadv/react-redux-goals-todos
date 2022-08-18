@@ -376,7 +376,11 @@
           {
             props.items && props.items.map(item => (
               <li key={item.id}>
-                <span>{item.name}</span>
+                <span
+                  style={{
+                    textDecoration: item.complete ? 'line-through' : 'none'
+                  }}
+                  onClick={() => props.toggle && props.toggle(item.id)}>{item.name}</span>
                 <button onClick={() => props.remove(item)}>X</button>
               </li>))
           }
@@ -402,12 +406,16 @@
         props.store.dispatch(removeTodoAction(todo.id));
       }
 
+      const toggleItem = id => {
+        props.store.dispatch(toggleTodoAction(id));
+      }
+
       return (
         <div>
           <h1>Todo List</h1>
           <input type='text' placeholder='Add Todo' ref={inputRef} />
           <button onClick={addItem}>Add Todo</button>
-          <List remove={removeItem} items={props.todos} />
+          <List toggle={toggleItem} remove={removeItem} items={props.todos} />
         </div>
       )
     }
