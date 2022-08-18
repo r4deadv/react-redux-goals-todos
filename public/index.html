@@ -83,6 +83,7 @@
     const ADD_GOAL = "ADD_GOAL";
     const REMOVE_GOAL = "REMOVE_GOAL";
     const TOGGLE_GOAL = "TOGGLE_GOAL";
+    const RECEIVE_DATA = 'RECEIVE_DATA';
 
     // action creators
     function addTodoAction(todo) {
@@ -127,6 +128,14 @@
       };
     }
 
+    function receiveDataAction(todos, goals) {
+      return {
+        type: RECEIVE_DATA,
+        todos,
+        goals
+      }
+    }
+
     // reducer function
     function todos(state = [], action) {
       switch (action.type) {
@@ -140,6 +149,8 @@
               ? todo
               : Object.assign({}, todo, { complete: !todo.complete })
           );
+        case RECEIVE_DATA:
+          return action.todos;
         default:
           return state;
       }
@@ -158,6 +169,8 @@
               ? goal
               : Object.assign({}, goal, { complete: !goal.complete })
           );
+        case RECEIVE_DATA:
+          return action.goals;
         default:
           return state;
       }
@@ -286,6 +299,13 @@
         })
       }, [])
 
+      React.useEffect(() => {
+        Promise.all([API.fetchTodos(), API.fetchGoals()]).then(([todos, goals]) => {
+          // console.log("Todos", todos);
+          // console.log("Goals", goals);
+          props.store.dispatch(receiveDataAction(todos, goals));
+        })
+      }, [])
 
       const { goals, todos } = props.store.getState();
 
