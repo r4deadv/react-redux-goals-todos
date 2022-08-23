@@ -137,6 +137,18 @@
       }
     }
 
+    function handleAddTodo(name, cb) {
+      return (dispatch) => {
+        return API.saveTodo(name)
+          .then((todo) => {
+            dispatch(addTodoAction(todo))
+            cb()
+          }).catch(() => {
+            alert("There was an error. Try again.")
+          })
+      }
+    }
+
     function handleDeleteTodo(todo) {
       return (dispatch) => {
         dispatch(removeTodoAction(todo.id));
@@ -148,10 +160,23 @@
       }
     }
 
+    function handleToggleTodo(id) {
+      return (dispatch) => {
+        dispatch(toggleTodoAction(id));
+
+        return API.saveTodoToggle(id).catch(() => {
+          dispatch(toggleTodoAction(id));
+          alert('An error occurred. Try again.')
+        })
+      }
+    }
+
+
     function handleAddGoal(name, cb) {
       return (dispatch) => {
         return API.saveGoal(name).then((goal) => {
           dispatch(addGoalAction(goal))
+          cb();
         }).catch(() => {
           alert('There was an error. Try again.')
         })
@@ -288,16 +313,14 @@
 
     const Todos = (props) => {
       const inputRef = React.useRef()
+
       const addItem = (event) => {
         event.preventDefault();
 
-        return API.saveTodo(inputRef.current.value)
-          .then((todo) => {
-            props.store.dispatch(addTodoAction(todo))
-            inputRef.current.value = ''
-          }).catch(() => {
-            alert("There was an error. Try again.")
-          })
+        props.store.dispatch(handleAddTodo(
+          inputRef.current.value,
+          () => inputRef.current.value = ''
+        ))
       }
 
       const removeItem = (todo) => {
@@ -305,12 +328,7 @@
       }
 
       const toggleItem = id => {
-        props.store.dispatch(toggleTodoAction(id));
-
-        return API.saveTodoToggle(id).catch(() => {
-          props.store.dispatch(toggleTodoAction(id));
-          alert('An error occurred. Try again.')
-        })
+        props.store.dispatch(handleToggleTodo(id))
       }
 
       return (
@@ -325,6 +343,7 @@
 
     const Goals = (props) => {
       const inputRef = React.useRef();
+
       const addItem = (event) => {
         event.preventDefault();
 
