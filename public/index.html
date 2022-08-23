@@ -194,6 +194,14 @@
       }
     }
 
+    function handleInitialData() {
+      return (dispatch) => {
+        Promise.all([API.fetchTodos(), API.fetchGoals()]).then(([todos, goals]) => {
+          dispatch(receiveDataAction(todos, goals));
+        })
+      }
+    }
+
     // reducer function
     function todos(state = [], action) {
       switch (action.type) {
@@ -371,16 +379,10 @@
       const [value, setValue] = React.useState(0)
 
       React.useEffect(() => {
+        props.store.dispatch(handleInitialData())
+
         props.store.subscribe(() => {
           setValue(value => value + 1)
-        })
-      }, [])
-
-      React.useEffect(() => {
-        Promise.all([API.fetchTodos(), API.fetchGoals()]).then(([todos, goals]) => {
-          // console.log("Todos", todos);
-          // console.log("Goals", goals);
-          props.store.dispatch(receiveDataAction(todos, goals));
         })
       }, [])
 
