@@ -29,6 +29,7 @@
   <script src="https://unpkg.com/@babel/standalone@7.17.6/babel.min.js"></script>
   <script src="https://tylermcginnis.com/goals-todos-api/index.js"></script>
   <script src="https://unpkg.com/redux-thunk@2.2.0/dist/redux-thunk.min.js"></script>
+  <script src="https://unpkg.com/react-redux@8.0.2/dist/react-redux.min.js"></script>
 </head>
 
 <body>
@@ -349,7 +350,7 @@
       )
     }
 
-    const ConnectedTodos = connect((state) => ({
+    const ConnectedTodos = ReactRedux.connect((state) => ({
       todos: state.todos,
     }))(Todos)
 
@@ -380,7 +381,7 @@
       )
     }
 
-    const ConnectedGoals = connect((state) => ({
+    const ConnectedGoals = ReactRedux.connect((state) => ({
       goals: state.goals,
     }))(Goals)
 
@@ -404,72 +405,18 @@
       )
     }
 
-    const ConnectedApp = connect((state) => ({
+    const ConnectedApp = ReactRedux.connect((state) => ({
       loading: state.loading
     }))(App);
 
-    const Context = React.createContext();
 
-    function connect(mapStateToProps) {
-      return (Component) => {
-        const Receiver = (props) => {
-          const [value, setValue] = React.useState(0);
-
-          React.useEffect(() => {
-            let unmounted = false;
-            const { subscribe } = props.store;
-
-            const unsubscribe = subscribe(() => {
-              setValue(value => value + 1)
-            });
-
-            return () => {
-              unsubscribe();
-              unmounted = true;
-            }
-          }, []);
-
-          const { dispatch, getState } = props.store;
-          const state = getState();
-          const stateNeeded = mapStateToProps(state);
-
-          return <Component {...stateNeeded} dispatch={dispatch} />;
-        }
-
-        const ConnectedComponent = () => {
-          return (
-            <Context.Consumer>
-              {
-                (store) => <Receiver store={store} />
-
-              }
-            </Context.Consumer>
-          )
-        }
-
-        return ConnectedComponent;
-      }
-    }
-
-    // Changes to implement
-    // - Know when the store changes. Use store.subscribe
-    // - What state is needed. Use mapStateToProps
-    // - Get the store from Context
-
-    const Provider = props => {
-      return (
-        <Context.Provider value={props.store}>
-          {props.children}
-        </Context.Provider>
-      )
-    }
 
     const root = ReactDOM.createRoot(document.getElementById('app'))
     root.render(
       <React.StrictMode>
-        <Provider store={store}>
+        <ReactRedux.Provider store={store}>
           <ConnectedApp />
-        </Provider>
+        </ReactRedux.Provider>
       </React.StrictMode>
     )
   </script>
