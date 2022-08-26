@@ -45,44 +45,6 @@
       return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36)
     }
 
-    // middleware
-    const checker = store => next => action => {
-      if (
-        action.type === ADD_TODO &&
-        action.todo.name.toLowerCase().includes('bitcoin')
-      ) {
-        return alert('Nope. That"s a bad idea.')
-      }
-
-      if (
-        action.type === ADD_GOAL &&
-        action.goal.name.toLowerCase().includes('bitcoin')
-      ) {
-        return alert('Nope. That"s a bad idea.')
-      }
-
-      return next(action)
-    }
-
-    // middleware
-    const logger = store => next => action => {
-      console.group(action.type)
-      console.log('The action: ', action)
-      const result = next(action)
-      console.log("The new state: ", store.getState())
-      console.groupEnd()
-      return result;
-    }
-
-    // // middleware
-    // const thunk = (store) => next => action => {
-    //   if (typeof action === 'function') {
-    //     return action(store.dispatch);
-    //   }
-
-    //   next(action);
-    // }
-
     // creating the store
     const store = Redux.createStore(Redux.combineReducers({
       todos,
@@ -94,108 +56,14 @@
   </script>
 
   <script type="text/babel">
-    const List = props => {
-      return (
-        <ul>
-          {
-            props.items && props.items.map(item => (
-              <li key={item.id}>
-                <span
-                  style={{
-                    textDecoration: item.complete ? 'line-through' : 'none'
-                  }}
-                  onClick={() => props.toggle && props.toggle(item.id)}>{item.name}</span>
-                <button onClick={() => props.remove(item)}>X</button>
-              </li>))
-          }
-        </ul>
-      )
-    }
-
-    const Todos = (props) => {
-      const inputRef = React.useRef()
-
-      const addItem = (event) => {
-        event.preventDefault();
-
-        props.dispatch(handleAddTodo(
-          inputRef.current.value,
-          () => inputRef.current.value = ''
-        ))
-      }
-
-      const removeItem = (todo) => {
-        props.dispatch(handleDeleteTodo(todo))
-      }
-
-      const toggleItem = id => {
-        props.dispatch(handleToggleTodo(id))
-      }
-
-      return (
-        <div>
-          <h1>Todo List</h1>
-          <input type='text' placeholder='Add Todo' ref={inputRef} />
-          <button onClick={addItem}>Add Todo</button>
-          <List toggle={toggleItem} remove={removeItem} items={props.todos} />
-        </div>
-      )
-    }
 
     const ConnectedTodos = ReactRedux.connect((state) => ({
       todos: state.todos,
     }))(Todos)
 
-    const Goals = (props) => {
-      const inputRef = React.useRef();
-
-      const addItem = (event) => {
-        event.preventDefault();
-
-        props.dispatch(handleAddGoal(
-          inputRef.current.value,
-          () => (inputRef.current.value = '')
-        ))
-      }
-
-      const removeItem = goal => {
-        props.dispatch(handleDeleteGoal(goal))
-      }
-
-      return (
-
-        <div>
-          <h1>Goals</h1>
-          <input type="text" placeholder='Add Goal' ref={inputRef} />
-          <button onClick={addItem}>Add Goal</button>
-          <List remove={removeItem} items={props.goals} />
-        </div>
-      )
-    }
-
     const ConnectedGoals = ReactRedux.connect((state) => ({
       goals: state.goals,
     }))(Goals)
-
-
-    const App = (props) => {
-
-      React.useEffect(() => {
-        props.dispatch(handleInitialData())
-      }, [])
-
-      if (props.loading === true) {
-        return <h3>Loading...</h3>
-      }
-
-      return (
-        <div>
-          <ConnectedTodos />
-          <ConnectedGoals />
-        </div>
-
-      )
-    }
 
     const ConnectedApp = ReactRedux.connect((state) => ({
       loading: state.loading
