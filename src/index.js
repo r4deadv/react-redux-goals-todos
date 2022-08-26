@@ -1,52 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-const Context = React.createContext();
+import App from "./components/App";
+import reducer from "./reducers";
+import middleware from "./middleware";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
 
-const Parent = () => {
-  return (
-    <div>
-      <h1>Parent</h1>
-      <Child />
-    </div>
-  );
-};
-
-const Child = () => {
-  return (
-    <div>
-      <h1>Child</h1>
-      <Grandchild />
-    </div>
-  );
-};
-
-const Grandchild = ({ name }) => {
-  return (
-    <Context.Consumer>
-      {(name) => (
-        <div>
-          <h1>Grandchild</h1>
-          <h3>Name: {name}</h3>
-        </div>
-      )}
-    </Context.Consumer>
-  );
-};
-
-const App = () => {
-  const name = "Andrew";
-
-  return (
-    <Context.Provider value={name}>
-      <Parent />
-    </Context.Provider>
-  );
-};
+const store = createStore(reducer, middleware);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <App />
-  </React.StrictMode>
+  </Provider>
 );

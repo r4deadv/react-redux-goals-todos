@@ -23,63 +23,13 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
   <title>React Redux Todos Goals</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.1.2/redux.min.js"></script>
-  <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.17.6/babel.min.js"></script>
-  <script src="https://tylermcginnis.com/goals-todos-api/index.js"></script>
-  <script src="https://unpkg.com/redux-thunk@2.2.0/dist/redux-thunk.min.js"></script>
-  <script src="https://unpkg.com/react-redux@8.0.2/dist/react-redux.min.js"></script>
 </head>
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root">
   </div>
-  <div id="app">
-  </div>
 
-  <script>
-    // helper function to get random id
-    function generateId() {
-      return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36)
-    }
-
-    // creating the store
-    const store = Redux.createStore(Redux.combineReducers({
-      todos,
-      goals,
-      loading,
-    }), Redux.applyMiddleware(ReduxThunk.default, checker, logger));
-
-
-  </script>
-
-  <script type="text/babel">
-
-    const ConnectedTodos = ReactRedux.connect((state) => ({
-      todos: state.todos,
-    }))(Todos)
-
-    const ConnectedGoals = ReactRedux.connect((state) => ({
-      goals: state.goals,
-    }))(Goals)
-
-    const ConnectedApp = ReactRedux.connect((state) => ({
-      loading: state.loading
-    }))(App);
-
-
-
-    const root = ReactDOM.createRoot(document.getElementById('app'))
-    root.render(
-      <React.StrictMode>
-        <ReactRedux.Provider store={store}>
-          <ConnectedApp />
-        </ReactRedux.Provider>
-      </React.StrictMode>
-    )
-  </script>
 </body>
 
 </html>
